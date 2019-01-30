@@ -1,0 +1,95 @@
+---
+title: "hw1"
+author: "Matthew Perrotta"
+date: "January 29, 2019"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+Import data
+```{r}
+ili = read.csv('./da_ILINet.csv')
+```
+Problem 1
+```{r}
+names(ili)
+
+ili[2, 'Massachusetts']
+
+ili[2, 6]
+ili %>% 
+  slice(2) %>% 
+  select(6)
+
+ili[30, 5:14]
+ili %>% 
+  slice(30) %>% 
+  select(5:14)
+
+ili[, 5]
+ili %>% 
+  select(5)
+
+ili[36, 'New.York.City']
+ili %>% 
+  slice(36) %>% 
+  select('New.York.City')
+
+ili[order(ili$'New.York.City', decreasing = T),] %>% 
+  select('New.York.City', Date)
+```
+
+Problem 2
+```{r}
+plot(ili$New.York.City, type='l', lty=1, main='Influenza-like illness in NYC ', xaxt='n', xlab='Date', ylab='ILI per 100,000')
+axis(1, at=1:nrow(ili), labels = ili$Date) 
+```
+
+Problem 3
+```{r}
+plot(ili$New.York, col = 'red', type='l', lty=1, main='Influenza-like illness in NYC and New York State ', xaxt='n', xlab='Date', ylab='ILI per 100,000')
+lines(ili$New.York.City)
+axis(1, at=1:nrow(ili), labels = ili$Date)
+legend('topright',
+  legend = c("NYC", "New York State (excluding NYC)"), 
+  col = c('black', 'red'),
+  pch = c(NA,NA), 
+  bty = "n", 
+  pt.cex = 2, 
+  cex = 1.2, 
+  text.col = c("black", 'red'), 
+  horiz = F , 
+  inset = c(0.1, 0.1))
+```
+
+Problem 4
+```{r}
+ili %>% 
+  gather(key = location, value = ili_cases, Alabama:Wyoming) %>% 
+  ggplot(aes(x = Date, y = ili_cases)) +
+  geom_boxplot() +
+  theme(legend.position = 'none', axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(
+    title = 'Influenza-Like Illness Across U.S.',
+    y = 'ILI per 100,000'
+  )
+```
+
+Problem 5 + 6
+```{r}
+quad_eq = function(a, b, c){
+  x1 = (-b + sqrt(b^2 - 4*a*c)) / (2*a)
+  x2 = (-b - sqrt(b^2 - 4*a*c)) / (2*a)
+  quad_eq = c(x1, x2)
+}
+
+a = quad_eq(2, 10, 3)
+a
+
+b = quad_eq(5, -6, 1)
+b
+```
+
